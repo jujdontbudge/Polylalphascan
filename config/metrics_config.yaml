@@ -1,0 +1,984 @@
+# PolyScan Alpha Finder v2.0 - 117 Metrics Configuration
+# Total: 117 metrics across 15 groups (A-O)
+
+metrics:
+  # =============================================================================
+  # GROUP A: Profitability (IDs 1-10)
+  # =============================================================================
+  - id: 1
+    group_id: A
+    code: total_pnl
+    name: Total PnL (USD)
+    description: Absolute profit/loss in USD across all trades
+    higher_is_better: true
+    formula: sum(realized_pnl)
+
+  - id: 2
+    group_id: A
+    code: total_roi
+    name: Total ROI (%)
+    description: Return on investment as percentage
+    higher_is_better: true
+    formula: (total_pnl / total_invested) * 100
+
+  - id: 3
+    group_id: A
+    code: annualized_roi
+    name: Annualized ROI (%)
+    description: ROI normalized to yearly basis
+    higher_is_better: true
+    formula: ((1 + roi) ^ (365 / days_active) - 1) * 100
+
+  - id: 4
+    group_id: A
+    code: profit_factor
+    name: Profit Factor
+    description: Gross profit divided by gross loss
+    higher_is_better: true
+    formula: sum(winning_pnl) / abs(sum(losing_pnl))
+
+  - id: 5
+    group_id: A
+    code: avg_trade_pnl
+    name: Average Trade PnL
+    description: Mean profit/loss per trade
+    higher_is_better: true
+    formula: mean(trade_pnl)
+
+  - id: 6
+    group_id: A
+    code: median_trade_pnl
+    name: Median Trade PnL
+    description: Median profit/loss per trade
+    higher_is_better: true
+    formula: median(trade_pnl)
+
+  - id: 7
+    group_id: A
+    code: best_trade_pnl
+    name: Best Trade PnL
+    description: Maximum single trade profit
+    higher_is_better: true
+    formula: max(trade_pnl)
+
+  - id: 8
+    group_id: A
+    code: worst_trade_pnl
+    name: Worst Trade PnL
+    description: Maximum single trade loss
+    higher_is_better: true
+    formula: min(trade_pnl)
+
+  - id: 9
+    group_id: A
+    code: pnl_per_volume
+    name: PnL per Volume
+    description: Profit efficiency relative to volume traded
+    higher_is_better: true
+    formula: total_pnl / total_volume
+
+  - id: 10
+    group_id: A
+    code: realized_vs_unrealized
+    name: Realized vs Unrealized Ratio
+    description: Ratio of realized to unrealized PnL
+    higher_is_better: true
+    formula: realized_pnl / (realized_pnl + unrealized_pnl)
+
+  # =============================================================================
+  # GROUP B: Risk & Stability (IDs 11-21)
+  # =============================================================================
+  - id: 11
+    group_id: B
+    code: sharpe_ratio
+    name: Sharpe Ratio
+    description: Risk-adjusted return (excess return / std dev)
+    higher_is_better: true
+    formula: (mean_return - risk_free_rate) / std_return
+
+  - id: 12
+    group_id: B
+    code: sortino_ratio
+    name: Sortino Ratio
+    description: Sharpe ratio using only downside deviation
+    higher_is_better: true
+    formula: (mean_return - risk_free_rate) / downside_std
+
+  - id: 13
+    group_id: B
+    code: calmar_ratio
+    name: Calmar Ratio
+    description: Annualized return divided by max drawdown
+    higher_is_better: true
+    formula: annualized_return / max_drawdown
+
+  - id: 14
+    group_id: B
+    code: max_drawdown
+    name: Maximum Drawdown (%)
+    description: Largest peak-to-trough decline
+    higher_is_better: false
+    formula: max((peak - trough) / peak) * 100
+
+  - id: 15
+    group_id: B
+    code: avg_drawdown
+    name: Average Drawdown (%)
+    description: Mean of all drawdown periods
+    higher_is_better: false
+    formula: mean(drawdowns)
+
+  - id: 16
+    group_id: B
+    code: drawdown_duration
+    name: Max Drawdown Duration (days)
+    description: Longest time to recover from drawdown
+    higher_is_better: false
+    formula: max(recovery_time)
+
+  - id: 17
+    group_id: B
+    code: volatility
+    name: Return Volatility (%)
+    description: Standard deviation of returns
+    higher_is_better: false
+    formula: std(daily_returns) * 100
+
+  - id: 18
+    group_id: B
+    code: downside_volatility
+    name: Downside Volatility (%)
+    description: Std dev of negative returns only
+    higher_is_better: false
+    formula: std(negative_returns) * 100
+
+  - id: 19
+    group_id: B
+    code: value_at_risk
+    name: Value at Risk (5%)
+    description: Maximum expected loss at 95% confidence
+    higher_is_better: false
+    formula: percentile(returns, 5)
+
+  - id: 20
+    group_id: B
+    code: conditional_var
+    name: Conditional VaR (5%)
+    description: Expected loss beyond VaR threshold
+    higher_is_better: false
+    formula: mean(returns[returns < var_5])
+
+  - id: 21
+    group_id: B
+    code: recovery_factor
+    name: Recovery Factor
+    description: Net profit divided by max drawdown
+    higher_is_better: true
+    formula: total_pnl / max_drawdown_usd
+
+  # =============================================================================
+  # GROUP C: Win/Loss Dynamics (IDs 22-32)
+  # =============================================================================
+  - id: 22
+    group_id: C
+    code: win_rate
+    name: Win Rate (%)
+    description: Percentage of profitable trades
+    higher_is_better: true
+    formula: (winning_trades / total_trades) * 100
+
+  - id: 23
+    group_id: C
+    code: loss_rate
+    name: Loss Rate (%)
+    description: Percentage of losing trades
+    higher_is_better: false
+    formula: (losing_trades / total_trades) * 100
+
+  - id: 24
+    group_id: C
+    code: avg_win
+    name: Average Win (USD)
+    description: Mean profit on winning trades
+    higher_is_better: true
+    formula: mean(winning_trade_pnl)
+
+  - id: 25
+    group_id: C
+    code: avg_loss
+    name: Average Loss (USD)
+    description: Mean loss on losing trades
+    higher_is_better: false
+    formula: mean(losing_trade_pnl)
+
+  - id: 26
+    group_id: C
+    code: win_loss_ratio
+    name: Win/Loss Ratio
+    description: Average win divided by average loss
+    higher_is_better: true
+    formula: avg_win / abs(avg_loss)
+
+  - id: 27
+    group_id: C
+    code: max_consecutive_wins
+    name: Max Consecutive Wins
+    description: Longest winning streak
+    higher_is_better: true
+    formula: max(consecutive_wins)
+
+  - id: 28
+    group_id: C
+    code: max_consecutive_losses
+    name: Max Consecutive Losses
+    description: Longest losing streak
+    higher_is_better: false
+    formula: max(consecutive_losses)
+
+  - id: 29
+    group_id: C
+    code: avg_streak_length
+    name: Average Streak Length
+    description: Mean length of win/loss streaks
+    higher_is_better: true
+    formula: mean(streak_lengths)
+
+  - id: 30
+    group_id: C
+    code: expectancy
+    name: Trade Expectancy
+    description: Expected value per trade
+    higher_is_better: true
+    formula: (win_rate * avg_win) - (loss_rate * avg_loss)
+
+  - id: 31
+    group_id: C
+    code: kelly_criterion
+    name: Kelly Criterion (%)
+    description: Optimal bet size based on edge
+    higher_is_better: true
+    formula: (win_rate - (1 - win_rate) / win_loss_ratio) * 100
+
+  - id: 32
+    group_id: C
+    code: break_even_rate
+    name: Break-Even Win Rate (%)
+    description: Minimum win rate needed to break even
+    higher_is_better: false
+    formula: 1 / (1 + win_loss_ratio) * 100
+
+  # =============================================================================
+  # GROUP D: Activity & Frequency (IDs 33-40)
+  # =============================================================================
+  - id: 33
+    group_id: D
+    code: total_trades
+    name: Total Trade Count
+    description: Total number of trades executed
+    higher_is_better: true
+    formula: count(trades)
+
+  - id: 34
+    group_id: D
+    code: total_volume
+    name: Total Volume (USD)
+    description: Sum of all trade values
+    higher_is_better: true
+    formula: sum(trade_volume)
+
+  - id: 35
+    group_id: D
+    code: avg_trade_size
+    name: Average Trade Size (USD)
+    description: Mean trade value
+    higher_is_better: true
+    formula: mean(trade_volume)
+
+  - id: 36
+    group_id: D
+    code: trades_per_day
+    name: Trades per Day
+    description: Average daily trading frequency
+    higher_is_better: true
+    formula: total_trades / days_active
+
+  - id: 37
+    group_id: D
+    code: active_days
+    name: Active Trading Days
+    description: Number of days with at least one trade
+    higher_is_better: true
+    formula: count(distinct(trade_dates))
+
+  - id: 38
+    group_id: D
+    code: activity_ratio
+    name: Activity Ratio (%)
+    description: Percentage of days active vs total period
+    higher_is_better: true
+    formula: (active_days / total_days) * 100
+
+  - id: 39
+    group_id: D
+    code: unique_markets
+    name: Unique Markets Traded
+    description: Number of different markets traded
+    higher_is_better: true
+    formula: count(distinct(market_ids))
+
+  - id: 40
+    group_id: D
+    code: market_concentration
+    name: Market Concentration (%)
+    description: Volume % in top market
+    higher_is_better: false
+    formula: (max_market_volume / total_volume) * 100
+
+  # =============================================================================
+  # GROUP E: Timing & Speed (IDs 41-48)
+  # =============================================================================
+  - id: 41
+    group_id: E
+    code: avg_hold_time
+    name: Average Hold Time (hours)
+    description: Mean duration of positions
+    higher_is_better: false
+    formula: mean(exit_time - entry_time)
+
+  - id: 42
+    group_id: E
+    code: median_hold_time
+    name: Median Hold Time (hours)
+    description: Median duration of positions
+    higher_is_better: false
+    formula: median(exit_time - entry_time)
+
+  - id: 43
+    group_id: E
+    code: min_hold_time
+    name: Minimum Hold Time (seconds)
+    description: Shortest position duration
+    higher_is_better: false
+    formula: min(exit_time - entry_time)
+
+  - id: 44
+    group_id: E
+    code: max_hold_time
+    name: Maximum Hold Time (days)
+    description: Longest position duration
+    higher_is_better: false
+    formula: max(exit_time - entry_time)
+
+  - id: 45
+    group_id: E
+    code: time_to_profit
+    name: Avg Time to Profit (hours)
+    description: Mean time for winning trades to realize
+    higher_is_better: false
+    formula: mean(winning_hold_times)
+
+  - id: 46
+    group_id: E
+    code: time_to_loss
+    name: Avg Time to Loss (hours)
+    description: Mean time for losing trades to realize
+    higher_is_better: true
+    formula: mean(losing_hold_times)
+
+  - id: 47
+    group_id: E
+    code: entry_timing_score
+    name: Entry Timing Score
+    description: Quality of trade entry points (0-100)
+    higher_is_better: true
+    formula: normalized_entry_quality
+
+  - id: 48
+    group_id: E
+    code: exit_timing_score
+    name: Exit Timing Score
+    description: Quality of trade exit points (0-100)
+    higher_is_better: true
+    formula: normalized_exit_quality
+
+  # =============================================================================
+  # GROUP F: Money Management (IDs 49-57)
+  # =============================================================================
+  - id: 49
+    group_id: F
+    code: avg_position_size
+    name: Average Position Size (%)
+    description: Mean position size relative to portfolio
+    higher_is_better: false
+    formula: mean(position_value / portfolio_value) * 100
+
+  - id: 50
+    group_id: F
+    code: max_position_size
+    name: Max Position Size (%)
+    description: Largest single position
+    higher_is_better: false
+    formula: max(position_value / portfolio_value) * 100
+
+  - id: 51
+    group_id: F
+    code: position_size_std
+    name: Position Size Std Dev
+    description: Consistency of position sizing
+    higher_is_better: false
+    formula: std(position_sizes)
+
+  - id: 52
+    group_id: F
+    code: risk_per_trade
+    name: Avg Risk per Trade (%)
+    description: Average potential loss per trade
+    higher_is_better: false
+    formula: mean(trade_risk / portfolio_value) * 100
+
+  - id: 53
+    group_id: F
+    code: leverage_used
+    name: Average Leverage
+    description: Mean leverage across positions
+    higher_is_better: false
+    formula: mean(position_value / collateral)
+
+  - id: 54
+    group_id: F
+    code: max_leverage
+    name: Maximum Leverage
+    description: Peak leverage used
+    higher_is_better: false
+    formula: max(position_value / collateral)
+
+  - id: 55
+    group_id: F
+    code: diversification_score
+    name: Diversification Score
+    description: Portfolio diversity metric (0-100)
+    higher_is_better: true
+    formula: 1 - sum(weights^2)
+
+  - id: 56
+    group_id: F
+    code: concentration_risk
+    name: Concentration Risk (%)
+    description: Percentage in top 3 positions
+    higher_is_better: false
+    formula: sum(top_3_positions) / total_portfolio * 100
+
+  - id: 57
+    group_id: F
+    code: capital_efficiency
+    name: Capital Efficiency
+    description: Returns relative to capital deployed
+    higher_is_better: true
+    formula: total_pnl / avg_capital_deployed
+
+  # =============================================================================
+  # GROUP G: Strategy Signature (IDs 58-66)
+  # =============================================================================
+  - id: 58
+    group_id: G
+    code: buy_sell_ratio
+    name: Buy/Sell Ratio
+    description: Ratio of buy to sell volume
+    higher_is_better: false
+    formula: buy_volume / sell_volume
+
+  - id: 59
+    group_id: G
+    code: long_short_bias
+    name: Long/Short Bias
+    description: Net directional exposure (-1 to 1)
+    higher_is_better: false
+    formula: (long_exposure - short_exposure) / total_exposure
+
+  - id: 60
+    group_id: G
+    code: contrarian_score
+    name: Contrarian Score
+    description: Trading against market sentiment
+    higher_is_better: false
+    formula: correlation(trades, market_sentiment) * -1
+
+  - id: 61
+    group_id: G
+    code: momentum_score
+    name: Momentum Score
+    description: Trading with market momentum
+    higher_is_better: false
+    formula: correlation(trades, price_momentum)
+
+  - id: 62
+    group_id: G
+    code: mean_reversion_score
+    name: Mean Reversion Score
+    description: Trading mean reversion patterns
+    higher_is_better: false
+    formula: mean_reversion_signal_accuracy
+
+  - id: 63
+    group_id: G
+    code: arbitrage_activity
+    name: Arbitrage Activity (%)
+    description: Percentage of potential arb trades
+    higher_is_better: false
+    formula: (arb_trades / total_trades) * 100
+
+  - id: 64
+    group_id: G
+    code: market_making_ratio
+    name: Market Making Ratio (%)
+    description: Both-side trading in same market
+    higher_is_better: false
+    formula: (two_sided_markets / total_markets) * 100
+
+  - id: 65
+    group_id: G
+    code: event_trading_ratio
+    name: Event Trading Ratio (%)
+    description: Trades near market resolution
+    higher_is_better: false
+    formula: (event_trades / total_trades) * 100
+
+  - id: 66
+    group_id: G
+    code: strategy_consistency
+    name: Strategy Consistency
+    description: How consistent is trading pattern
+    higher_is_better: true
+    formula: 1 - std(strategy_signals)
+
+  # =============================================================================
+  # GROUP H: Psychological (IDs 67-74)
+  # =============================================================================
+  - id: 67
+    group_id: H
+    code: disposition_effect
+    name: Disposition Effect
+    description: Tendency to hold losers, sell winners
+    higher_is_better: false
+    formula: (hold_time_losers - hold_time_winners) / avg_hold_time
+
+  - id: 68
+    group_id: H
+    code: revenge_trading_score
+    name: Revenge Trading Score
+    description: Trading frequency increase after loss
+    higher_is_better: false
+    formula: trade_freq_after_loss / baseline_freq
+
+  - id: 69
+    group_id: H
+    code: overconfidence_index
+    name: Overconfidence Index
+    description: Position size increase after wins
+    higher_is_better: false
+    formula: pos_size_after_win / baseline_size
+
+  - id: 70
+    group_id: H
+    code: loss_aversion_ratio
+    name: Loss Aversion Ratio
+    description: Pain of loss vs pleasure of gain
+    higher_is_better: false
+    formula: abs(behavior_change_loss) / behavior_change_win
+
+  - id: 71
+    group_id: H
+    code: fomo_index
+    name: FOMO Index
+    description: Chasing trades after missing moves
+    higher_is_better: false
+    formula: late_entry_frequency
+
+  - id: 72
+    group_id: H
+    code: panic_sell_frequency
+    name: Panic Sell Frequency
+    description: Exits during high volatility
+    higher_is_better: false
+    formula: (volatility_exits / total_exits) * 100
+
+  - id: 73
+    group_id: H
+    code: patience_score
+    name: Patience Score
+    description: Ability to wait for setups
+    higher_is_better: true
+    formula: selective_trade_ratio
+
+  - id: 74
+    group_id: H
+    code: discipline_score
+    name: Discipline Score
+    description: Adherence to position sizing rules
+    higher_is_better: true
+    formula: 1 - position_size_deviation
+
+  # =============================================================================
+  # GROUP I: Advanced Alpha (IDs 75-83)
+  # =============================================================================
+  - id: 75
+    group_id: I
+    code: alpha_vs_market
+    name: Alpha vs Market
+    description: Excess return above market benchmark
+    higher_is_better: true
+    formula: portfolio_return - market_return
+
+  - id: 76
+    group_id: I
+    code: information_ratio
+    name: Information Ratio
+    description: Alpha divided by tracking error
+    higher_is_better: true
+    formula: alpha / tracking_error
+
+  - id: 77
+    group_id: I
+    code: treynor_ratio
+    name: Treynor Ratio
+    description: Return per unit of systematic risk
+    higher_is_better: true
+    formula: (return - risk_free) / beta
+
+  - id: 78
+    group_id: I
+    code: beta
+    name: Beta
+    description: Sensitivity to market movements
+    higher_is_better: false
+    formula: covariance(returns, market) / variance(market)
+
+  - id: 79
+    group_id: I
+    code: edge_per_trade
+    name: Edge per Trade (bps)
+    description: Expected edge in basis points
+    higher_is_better: true
+    formula: expectancy / avg_trade_size * 10000
+
+  - id: 80
+    group_id: I
+    code: hit_rate_high_conviction
+    name: Hit Rate on High Conviction
+    description: Win rate on larger positions
+    higher_is_better: true
+    formula: wins_large_positions / large_positions * 100
+
+  - id: 81
+    group_id: I
+    code: asymmetric_payoff
+    name: Asymmetric Payoff Ratio
+    description: Upside capture vs downside
+    higher_is_better: true
+    formula: upside_capture / downside_capture
+
+  - id: 82
+    group_id: I
+    code: smart_money_indicator
+    name: Smart Money Indicator
+    description: Alignment with winning whale activity
+    higher_is_better: true
+    formula: correlation(trades, whale_profitable_trades)
+
+  - id: 83
+    group_id: I
+    code: early_mover_advantage
+    name: Early Mover Advantage
+    description: Profiting from early market entry
+    higher_is_better: true
+    formula: early_entry_pnl / total_pnl
+
+  # =============================================================================
+  # GROUP J: Hygiene & Metadata (IDs 84-94)
+  # =============================================================================
+  - id: 84
+    group_id: J
+    code: wallet_age_days
+    name: Wallet Age (days)
+    description: Days since first trade
+    higher_is_better: true
+    formula: current_date - first_trade_date
+
+  - id: 85
+    group_id: J
+    code: days_since_last_trade
+    name: Days Since Last Trade
+    description: Recency of activity
+    higher_is_better: false
+    formula: current_date - last_trade_date
+
+  - id: 86
+    group_id: J
+    code: trading_history_length
+    name: Trading History Length
+    description: Span of trading activity in days
+    higher_is_better: true
+    formula: last_trade_date - first_trade_date
+
+  - id: 87
+    group_id: J
+    code: data_completeness
+    name: Data Completeness (%)
+    description: Percentage of trades with full data
+    higher_is_better: true
+    formula: (complete_trades / total_trades) * 100
+
+  - id: 88
+    group_id: J
+    code: verified_positions
+    name: Verified Positions (%)
+    description: Positions that reconcile correctly
+    higher_is_better: true
+    formula: (verified / total_positions) * 100
+
+  - id: 89
+    group_id: J
+    code: trade_anomaly_rate
+    name: Trade Anomaly Rate (%)
+    description: Suspicious or irregular trades
+    higher_is_better: false
+    formula: (anomalous_trades / total_trades) * 100
+
+  - id: 90
+    group_id: J
+    code: failed_trade_rate
+    name: Failed Trade Rate (%)
+    description: Reverted or failed transactions
+    higher_is_better: false
+    formula: (failed_trades / total_trades) * 100
+
+  - id: 91
+    group_id: J
+    code: gas_efficiency
+    name: Gas Efficiency Score
+    description: Transaction cost efficiency
+    higher_is_better: true
+    formula: 1 - (gas_costs / trade_value)
+
+  - id: 92
+    group_id: J
+    code: slippage_rate
+    name: Average Slippage (%)
+    description: Price impact of trades
+    higher_is_better: false
+    formula: mean(abs(executed_price - expected_price) / expected_price) * 100
+
+  - id: 93
+    group_id: J
+    code: cross_market_activity
+    name: Cross-Market Activity
+    description: Number of related market pairs
+    higher_is_better: true
+    formula: count(distinct(correlated_market_pairs))
+
+  - id: 94
+    group_id: J
+    code: data_quality_score
+    name: Data Quality Score
+    description: Overall data reliability (0-100)
+    higher_is_better: true
+    formula: weighted_average(data_metrics)
+
+  # =============================================================================
+  # GROUP K: Copy-ability (IDs 95-100)
+  # =============================================================================
+  - id: 95
+    group_id: K
+    code: trade_frequency_score
+    name: Trade Frequency Score
+    description: Suitable frequency for copying
+    higher_is_better: true
+    formula: normalized_trade_frequency
+
+  - id: 96
+    group_id: K
+    code: execution_window
+    name: Execution Window (seconds)
+    description: Time available to copy trade
+    higher_is_better: true
+    formula: median(time_at_price)
+
+  - id: 97
+    group_id: K
+    code: liquidity_requirement
+    name: Liquidity Requirement
+    description: Min liquidity needed to copy
+    higher_is_better: false
+    formula: avg_trade_size * 2
+
+  - id: 98
+    group_id: K
+    code: copy_scalability
+    name: Copy Scalability Score
+    description: How well strategy scales
+    higher_is_better: true
+    formula: performance_vs_size_correlation
+
+  - id: 99
+    group_id: K
+    code: transparency_score
+    name: Transparency Score
+    description: Clarity of trading patterns
+    higher_is_better: true
+    formula: pattern_predictability
+
+  - id: 100
+    group_id: K
+    code: risk_adjusted_copyability
+    name: Risk-Adjusted Copyability
+    description: Combined copy suitability metric
+    higher_is_better: true
+    formula: sharpe * transparency * scalability
+
+  # =============================================================================
+  # GROUP L: Market Intelligence (IDs 101-104) [NEW IN v2.0]
+  # =============================================================================
+  - id: 101
+    group_id: L
+    code: market_timing_accuracy
+    name: Market Timing Accuracy (%)
+    description: Correct directional calls on markets
+    higher_is_better: true
+    formula: (correct_direction_trades / total_trades) * 100
+
+  - id: 102
+    group_id: L
+    code: category_expertise
+    name: Category Expertise Score
+    description: Performance in specialized categories
+    higher_is_better: true
+    formula: category_alpha / category_volume
+
+  - id: 103
+    group_id: L
+    code: price_prediction_skill
+    name: Price Prediction Skill
+    description: Accuracy of implied price targets
+    higher_is_better: true
+    formula: 1 - mean(abs(predicted - actual) / actual)
+
+  - id: 104
+    group_id: L
+    code: event_outcome_accuracy
+    name: Event Outcome Accuracy (%)
+    description: Correct prediction on event resolution
+    higher_is_better: true
+    formula: (correct_outcomes / total_outcomes) * 100
+
+  # =============================================================================
+  # GROUP M: Execution Quality (IDs 105-108) [NEW IN v2.0]
+  # =============================================================================
+  - id: 105
+    group_id: M
+    code: fill_rate
+    name: Fill Rate (%)
+    description: Percentage of orders fully filled
+    higher_is_better: true
+    formula: (filled_orders / total_orders) * 100
+
+  - id: 106
+    group_id: M
+    code: price_improvement
+    name: Price Improvement (bps)
+    description: Better execution vs mid-price
+    higher_is_better: true
+    formula: (mid_price - executed_price) / mid_price * 10000
+
+  - id: 107
+    group_id: M
+    code: execution_speed
+    name: Execution Speed Score
+    description: Time from signal to execution
+    higher_is_better: true
+    formula: 100 - normalized_execution_time
+
+  - id: 108
+    group_id: M
+    code: market_impact
+    name: Market Impact (bps)
+    description: Price movement caused by trade
+    higher_is_better: false
+    formula: (post_trade_price - pre_trade_price) / pre_trade_price * 10000
+
+  # =============================================================================
+  # GROUP N: Bot/Quant Confirmation (IDs 109-113) [NEW IN v2.0]
+  # =============================================================================
+  - id: 109
+    group_id: N
+    code: trade_interval_entropy
+    name: Trade Interval Entropy
+    description: Randomness of trade timing (low = bot)
+    higher_is_better: false
+    formula: entropy(trade_intervals)
+
+  - id: 110
+    group_id: N
+    code: round_number_avoidance
+    name: Round Number Avoidance (%)
+    description: Avoiding round prices (high = bot)
+    higher_is_better: true
+    formula: (non_round_trades / total_trades) * 100
+
+  - id: 111
+    group_id: N
+    code: latency_consistency
+    name: Latency Consistency Score
+    description: Variance in execution timing (low = bot)
+    higher_is_better: false
+    formula: std(execution_latencies)
+
+  - id: 112
+    group_id: N
+    code: multi_market_simultaneity
+    name: Multi-Market Simultaneity
+    description: Concurrent trades across markets
+    higher_is_better: true
+    formula: count(simultaneous_market_trades)
+
+  - id: 113
+    group_id: N
+    code: session_pattern_regularity
+    name: Session Pattern Regularity
+    description: Clock-like trading patterns (high = cron)
+    higher_is_better: true
+    formula: regularity_score(session_times)
+
+  # =============================================================================
+  # GROUP O: Portfolio-Level (IDs 114-117) [NEW IN v2.0]
+  # =============================================================================
+  - id: 114
+    group_id: O
+    code: portfolio_heat_map
+    name: Portfolio Heat Score
+    description: Current portfolio risk level
+    higher_is_better: false
+    formula: sum(position_risk_scores)
+
+  - id: 115
+    group_id: O
+    code: correlation_exposure
+    name: Correlation Exposure
+    description: Portfolio correlation to market
+    higher_is_better: false
+    formula: portfolio_beta
+
+  - id: 116
+    group_id: O
+    code: sector_balance
+    name: Sector Balance Score
+    description: Distribution across categories
+    higher_is_better: true
+    formula: 1 - gini(sector_allocations)
+
+  - id: 117
+    group_id: O
+    code: net_exposure
+    name: Net Exposure (%)
+    description: Overall directional exposure
+    higher_is_better: false
+    formula: abs(long_value - short_value) / total_value * 100
